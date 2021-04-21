@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { escapeRegex } = require("./common");
 
+const collectionName = process.env.MONGO_COLLECTION
+
 /**
  *
  * @param {String} name
@@ -39,7 +41,7 @@ exports.getBooks = async (sort, page, limit, search, order) => {
 	limit = limit || 10;
 	search = search || {};
 
-	const Books = await getCollection("books");
+	const Books = await getCollection(collectionName);
 
 	const skip = (page - 1) * limit;
 	const books = await Books.find(search)
