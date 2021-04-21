@@ -1,0 +1,18 @@
+<style>
+	body {
+		width: 100vw;
+		height: 90vh;
+		overflow: hidden;
+	}
+</style>
+{{> header home=true}}
+<main class="d-flex justify-content-center align-items-center flex-column py-5 w-100 h-100">
+	<a href="/books" class="btn btn-outline-info mb-2 p-5 d-flex align-items-center">
+		<span class="material-icons mr-3">table_chart</span>
+		Table View
+	</a>
+	<a href="/api/books" class="btn btn-outline-info p-5 d-flex align-items-center">
+		<span class="material-icons mr-3">source</span>
+		Raw JSON
+	</a>
+</main>

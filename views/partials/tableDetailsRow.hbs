@@ -1,0 +1,48 @@
+<tr class="details-row" style="display: none;">
+	<td colspan="5">
+		<div class="details" style="overflow: hidden">
+			<div class="d-flex my-3 align-items-start">
+				<img
+					src="{{#if thumbnailUrl}}{{thumbnailUrl}}{{else}}https://bookstoreromanceday.org/wp-content/uploads/2020/08/book-cover-placeholder.png{{/if}}"
+					alt="{{title}}" class="d-block mr-2 thumbnail-img">
+				<div>
+					<h3>
+						{{title}}
+						{{#if price}}
+							<span class="pill">
+								{{currency currency}}{{price}}</span>
+						{{/if}}
+						{{#if discount}}
+							<span class="pill bg-success">-{{discount}}{{units discountUnits}}</span>
+						{{/if}}
+						<span class="pill bg-info {{#ifEquals status 'MEAP'}}bg-warning{{/ifEquals}}">
+							{{status}}
+						</span>
+					</h3>
+					<h6 class="text-muted">ISBN: {{#if isbn}}{{isbn}}{{else}}N/A{{/if}}</h6>
+					<p class="mb-1">Authors: {{array authors}}</p>
+
+					<p class="mb-1">Published:
+						{{#if publishedDate}}{{dateFormat publishedDate}}{{else}}N/A{{/if}}
+					</p>
+					<p class="mb-1">Page Count: {{pageCount}}</p>
+					<p class="mb-1">Categories: {{array categories}}</p>
+				</div>
+			</div>
+			<div>
+				{{#if shortDescription}}
+					<div>
+						<h5><strong>Short Description:</strong></h5>
+						<p>{{shortDescription}}</p>
+					</div>
+				{{/if}}
+				{{#if longDescription}}
+					<div>
+						<h5><strong>Long Description:</strong></h5>
+						<p>{{longDescription}}</p>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+	</td>
+</tr>

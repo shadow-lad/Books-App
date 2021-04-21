@@ -1,0 +1,255 @@
+{{> header}}
+<main class="container p-5">
+	<div class="row">
+		<h1>Books</h1>
+	</div>
+	<div class="row">
+		<div class="input-group">
+			<input type="search" name="search" id="search" class="form-control" placeholder="Search by title..."
+				value="{{searchTerm.text}}">
+			<div class="input-group-append">
+				<a href="/books?page=1{{#if ../sort}}&sort={{../sort}}{{/if}}{{#if ../limit}}&limit={{../limit}}{{/if}}{{#if ../searchTerm.text}}&search={{../searchTerm.url}}{{/if}}"
+					class="btn btn-dark material-icons" id="search-button">search</a>
+			</div>
+		</div>
+	</div>
+	<div class="table-container w-100 mt-3">
+		<div class="row m-auto w-100">
+			<table class="w-100">
+				<thead>
+					<tr>
+						<th data-name="title">
+							<div class="d-flex align-items-center">
+								<span style="flex:1">
+									Title
+								</span>
+								{{#ifEquals sort "title"}}
+									<span class="material-icons">
+										{{#if order}}
+											expand_less
+										{{else}}
+											expand_more
+										{{/if}}
+									</span>
+								{{/ifEquals}}
+							</div>
+						</th>
+						<th data-name="price">
+							<div class="d-flex align-items-center">
+								<span style="flex:1">
+									Price
+								</span>
+								{{#ifEquals sort "price"}}
+									<span class="material-icons">
+										{{#if order}}
+											expand_less
+										{{else}}
+											expand_more
+										{{/if}}
+									</span>
+								{{/ifEquals}}
+							</div>
+						</th>
+						<th data-name="categories">
+							<div class="d-flex align-items-center">
+								<span style="flex:1">
+									Categories
+								</span>
+								{{#ifEquals sort "categories"}}
+									<span class="material-icons">
+										{{#if order}}
+											expand_less
+										{{else}}
+											expand_more
+										{{/if}}
+									</span>
+								{{/ifEquals}}
+							</div>
+						</th>
+						<th data-name="authors">
+							<div class="d-flex align-items-center">
+								<span style="flex:1">
+									Authors
+								</span>
+								{{#ifEquals sort "authors"}}
+									<span class="material-icons">
+										{{#if order}}
+											expand_less
+										{{else}}
+											expand_more
+										{{/if}}
+									</span>
+								{{/ifEquals}}
+							</div>
+						</th>
+						<th data-name="status">
+							<div class="d-flex align-items-center">
+								<span style="flex:1">
+									Status
+								</span>
+								{{#ifEquals sort "status"}}
+									<span class="material-icons">
+										{{#if order}}
+											expand_less
+										{{else}}
+											expand_more
+										{{/if}}
+									</span>
+								{{/ifEquals}}
+							</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#if books.length}}
+						{{#each books}}
+							{{> tableRow}}
+							{{> tableDetailsRow}}
+						{{/each}}
+					{{else}}
+						<tr>
+							<td colspan="5">
+								<h3 class="text-muted">No results found matching your search...</h3>
+							</td>
+						</tr>
+					{{/if}}
+
+				</tbody>
+			</table>
+		</div>
+		{{#if books.length }}
+			<div class="row w-100 justify-content-between align-items-center mt-3 mx-auto">
+				<div class="d-flex">
+					<label for="limit-select" style="flex:1;">Results per page: </label>
+					<select name="limit" id="limit-select" class="custom-select" style="flex: 1">
+						<option value="10" {{#ifEquals limit 10}}selected{{/ifEquals}}>10</option>
+						<option value="25" {{#ifEquals limit 25}}selected{{/ifEquals}}>25</option>
+						<option value="50" {{#ifEquals limit 50}}selected{{/ifEquals}}>50</option>
+						<option value="100" {{#ifEquals limit 100}}selected{{/ifEquals}}>100</option>
+					</select>
+				</div>
+				<div class="btn-group bg-light">
+					<a {{#if prev}}
+						href="/books?page={{prev}}{{#if sort}}&sort={{sort}}{{/if}}&order={{#if order}}asc{{else}}desc{{/if}}{{#if limit}}&limit={{limit}}{{/if}}{{#if searchTerm.text}}&search={{searchTerm.url}}{{/if}}"
+						{{/if}} class="btn btn-outline-info {{#if prev}}{{else}}disabled{{/if}}">
+						Previous
+					</a>
+					{{#for first last 1 }}
+						<a href="/books?page={{this}}{{#if ../sort}}&sort={{../sort}}{{/if}}&order={{#if ../order}}asc{{else}}desc{{/if}}{{#if ../limit}}&limit={{../limit}}{{/if}}{{#if ../searchTerm.text}}&search={{../searchTerm.url}}{{/if}}"
+							class="btn btn-outline-info {{#ifEquals this ../page}}active{{/ifEquals}}">
+							{{this}}
+						</a>
+					{{/for}}
+					<a {{#if next}}
+						href="/books?page={{next}}{{#if sort}}&sort={{sort}}{{/if}}&order={{#if order}}asc{{else}}desc{{/if}}{{#if limit}}&limit={{limit}}{{/if}}{{#if searchTerm.text}}&search={{searchTerm.url}}{{/if}}"
+						{{/if}} class="btn btn-outline-info {{#if next}}{{else}}disabled{{/if}}">
+						Next
+					</a>
+				</div>
+			</div>
+		{{/if}}
+	</div>
+</main>
+<script>
+	const searchButton = document.getElementById("search-button");
+	const searchInput = document.getElementById("search");
+	const tableHeads = document.querySelectorAll("th");
+	const tableBodyRows = document.querySelectorAll("tbody > tr.table-row");
+
+	searchInput.addEventListener("search", () => searchButton.click());
+
+	searchButton.addEventListener("click", (event) => {
+		const url = new URL(window.location.href);
+		url.searchParams.delete("search");
+		url.searchParams.append("search", searchInput.value);
+		searchButton.href = url.toString();
+	});
+
+	function initFilters() {
+		for (let tableHead of tableHeads) {
+			tableHead.addEventListener("click", (event) => {
+
+				const name = event.target.dataset.name;
+				const url = new URL(window.location.href);
+				console.log(name);
+
+				const currentSort = url.searchParams.get("sort");
+				const currentOrder = url.searchParams.get("order");
+
+				url.searchParams.delete("order");
+				if (currentSort === name || !currentSort && name === "title") {
+					if (!currentOrder || currentOrder === "asc") {
+						url.searchParams.append("order", "desc");
+					} else {
+						url.searchParams.append("order", "asc")
+					}
+				} else {
+					url.searchParams.delete("sort");
+					url.searchParams.append("sort", name);
+					url.searchParams.append("order", "asc");
+				}
+
+
+				const a = document.createElement("a");
+				a.href = url.toString();
+
+				a.click();
+
+			});
+		}
+	}
+
+	function initDetails() {
+		console.log("initDetails");
+
+		for (let image of document.querySelectorAll("img.thumbnail-img")) {
+			const newImage = "https://bookstoreromanceday.org/wp-content/uploads/2020/08/book-cover-placeholder.png";
+			image.addEventListener("error", () => {
+				if (image.src !== newImage) {
+					image.src = newImage;
+				}
+			});
+		}
+
+		for (let row of tableBodyRows) {
+			const expandIcon = row.querySelector("span.icon-expand");
+			const detailsRow = row.nextElementSibling;
+			const details = detailsRow.querySelector("div.details");
+			expandIcon.addEventListener("click", (event) => {
+				if (expandIcon.textContent === "add_circle") {
+					expandIcon.textContent = "remove_circle";
+					detailsRow.style = "";
+
+				} else {
+					expandIcon.textContent = "add_circle";
+					detailsRow.style = "display:none";
+				}
+			});
+		}
+	}
+
+	function initSelect() {
+		document.getElementById("limit-select").addEventListener("change", (event) => {
+			const url = new URL(window.location.href);
+			let limit = url.searchParams.get("limit");
+			if (!limit) {
+				limit = 10;
+			}
+			if (limit === event.target.value) return;
+
+			url.searchParams.delete("limit");
+			url.searchParams.append("limit", event.target.value);
+
+			const a = document.createElement("a");
+			a.href = url.toString();
+
+			a.click();
+
+		});
+	}
+
+	initDetails();
+	initFilters();
+	initSelect();
+
+</script>

@@ -1,0 +1,24 @@
+{
+  "name": "books-assignment",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "keywords": [],
+  "author": "shadow-lad <shardav.lad21@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.0",
+    "mongoose": "^5.12.5"
+  },
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7"
+  }
+}

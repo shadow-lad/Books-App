@@ -1,0 +1,26 @@
+<tr class="table-row">
+	<td>
+		<div class="d-flex align-items-center">
+			<span class="material-icons mr-2 icon-expand">add_circle</span>
+			{{title}}
+		</div>
+	</td>
+	<td>
+		{{#if price}}
+			{{currency currency}}{{price}}
+		{{else}}
+			N/A
+		{{/if}}
+	</td>
+	<td>{{#if categories}}
+			{{array categories}}
+		{{else}}
+			N/A
+		{{/if}}
+	</td>
+	<td>{{array authors}}</td>
+	<td>
+		<div class="pill bg-info {{#ifEquals status 'MEAP'}}bg-warning{{/ifEquals}}" style="text-align: center;">
+			{{status}}</div>
+	</td>
+</tr>
